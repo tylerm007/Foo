@@ -1,0 +1,125 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Cart: Table to store shopping cart details for customers
+Customer: Table to store customer details
+CartItem: Junction table to store items in a shopping cart
+Product: Table to store information on golf clothing products
+Inventory: Table to store product inventory details
+Order: Table to store orders made by customers
+OrderItem: Junction table to store items within an order
+Payment: Table to store payment information for orders
+ProductPromotion: Junction table to associate products with promotions
+Promotion: Table to define promotions available in the store
+Shipping: Table to handle shipping details for orders
+Supplier: Table for suppliers providing products
+SupplierProduct: Junction table linking suppliers with their products
+'''
+}
+
+Table Cart {
+    id INTEGER [primary key]
+    customer_id INTEGER 
+    created_date DATETIME 
+    }
+
+Table Customer {
+    id INTEGER [primary key]
+    name VARCHAR(100) 
+    email VARCHAR(100) 
+    balance FLOAT 
+    }
+
+Table CartItem {
+    id INTEGER [primary key]
+    cart_id INTEGER 
+    product_id INTEGER 
+    quantity INTEGER 
+    amount FLOAT 
+    }
+
+Table Product {
+    id INTEGER [primary key]
+    name VARCHAR(100) 
+    category VARCHAR(50) 
+    unit_price FLOAT 
+    }
+
+Table Inventory {
+    id INTEGER [primary key]
+    product_id INTEGER 
+    stock_quantity INTEGER 
+    }
+
+Table Order {
+    id INTEGER [primary key]
+    customer_id INTEGER 
+    order_date DATETIME 
+    amount_total FLOAT 
+    }
+
+Table OrderItem {
+    id INTEGER [primary key]
+    order_id INTEGER 
+    product_id INTEGER 
+    quantity INTEGER 
+    amount FLOAT 
+    }
+
+Table Payment {
+    id INTEGER [primary key]
+    order_id INTEGER 
+    payment_date DATETIME 
+    amount_paid FLOAT 
+    }
+
+Table ProductPromotion {
+    id INTEGER [primary key]
+    product_id INTEGER 
+    promotion_id INTEGER 
+    }
+
+Table Promotion {
+    id INTEGER [primary key]
+    name VARCHAR(100) 
+    discount_percentage FLOAT 
+    }
+
+Table Shipping {
+    id INTEGER [primary key]
+    order_id INTEGER 
+    address VARCHAR(255) 
+    shipping_date DATETIME 
+    }
+
+Table Supplier {
+    id INTEGER [primary key]
+    name VARCHAR(100) 
+    contact_email VARCHAR(100) 
+    }
+
+Table SupplierProduct {
+    id INTEGER [primary key]
+    supplier_id INTEGER 
+    product_id INTEGER 
+    }
+
+
+
+// Relationships
+    Ref: Cart.(customer_id) < Customer.(id)
+    Ref: CartItem.(cart_id) < Cart.(id)
+    Ref: CartItem.(product_id) < Product.(id)
+    Ref: Inventory.(product_id) < Product.(id)
+    Ref: Order.(customer_id) < Customer.(id)
+    Ref: OrderItem.(order_id) < Order.(id)
+    Ref: OrderItem.(product_id) < Product.(id)
+    Ref: Payment.(order_id) < Order.(id)
+    Ref: ProductPromotion.(product_id) < Product.(id)
+    Ref: ProductPromotion.(promotion_id) < Promotion.(id)
+    Ref: Shipping.(order_id) < Order.(id)
+    Ref: SupplierProduct.(product_id) < Product.(id)
+    Ref: SupplierProduct.(supplier_id) < Supplier.(id)

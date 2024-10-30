@@ -1,0 +1,383 @@
+about:
+  date: October 30, 2024 17:22:07
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 13
+  number_tables: 13
+info_toggle_checked: true
+resources:
+  Cart:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+      required: true
+    - name: created_date
+      type: DATETIME
+    description: Table to store shopping cart details for customers
+    info_list: Table to store shopping cart details for customers
+    tab_groups:
+    - direction: tomany
+      fks:
+      - cart_id
+      name: CartItemList
+      resource: CartItem
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Cart
+    user_key: id
+  CartItem:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: cart_id
+      required: true
+    - name: product_id
+      required: true
+    - name: quantity
+      required: true
+    - name: amount
+      required: true
+    description: Junction table to store items in a shopping cart
+    info_list: Junction table to store items in a shopping cart
+    tab_groups:
+    - direction: toone
+      fks:
+      - cart_id
+      name: cart
+      resource: Cart
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: CartItem
+    user_key: id
+  Customer:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: email
+      required: true
+    - name: balance
+    - name: id
+    description: Table to store customer details
+    info_list: Table to store customer details
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: CartList
+      resource: Cart
+    - direction: tomany
+      fks:
+      - customer_id
+      name: OrderList
+      resource: Order
+    type: Customer
+    user_key: name
+  Inventory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: product_id
+      required: true
+    - name: stock_quantity
+      required: true
+    description: Table to store product inventory details
+    info_list: Table to store product inventory details
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: Inventory
+    user_key: id
+  Order:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+      required: true
+    - name: order_date
+      type: DATETIME
+    - name: amount_total
+    description: Table to store orders made by customers
+    info_list: Table to store orders made by customers
+    tab_groups:
+    - direction: tomany
+      fks:
+      - order_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: tomany
+      fks:
+      - order_id
+      name: PaymentList
+      resource: Payment
+    - direction: tomany
+      fks:
+      - order_id
+      name: ShippingList
+      resource: Shipping
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    type: Order
+    user_key: id
+  OrderItem:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+      required: true
+    - name: product_id
+      required: true
+    - name: quantity
+      required: true
+    - name: amount
+      required: true
+    description: Junction table to store items within an order
+    info_list: Junction table to store items within an order
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: OrderItem
+    user_key: id
+  Payment:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+      required: true
+    - name: payment_date
+      type: DATETIME
+    - name: amount_paid
+      required: true
+    description: Table to store payment information for orders
+    info_list: Table to store payment information for orders
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Payment
+    user_key: id
+  Product:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: category
+      required: true
+    - name: unit_price
+      required: true
+    - name: id
+    description: Table to store information on golf clothing products
+    info_list: Table to store information on golf clothing products
+    tab_groups:
+    - direction: tomany
+      fks:
+      - product_id
+      name: CartItemList
+      resource: CartItem
+    - direction: tomany
+      fks:
+      - product_id
+      name: InventoryList
+      resource: Inventory
+    - direction: tomany
+      fks:
+      - product_id
+      name: OrderItemList
+      resource: OrderItem
+    - direction: tomany
+      fks:
+      - product_id
+      name: ProductPromotionList
+      resource: ProductPromotion
+    - direction: tomany
+      fks:
+      - product_id
+      name: SupplierProductList
+      resource: SupplierProduct
+    type: Product
+    user_key: name
+  ProductPromotion:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: product_id
+      required: true
+    - name: promotion_id
+      required: true
+    description: Junction table to associate products with promotions
+    info_list: Junction table to associate products with promotions
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    - direction: toone
+      fks:
+      - promotion_id
+      name: promotion
+      resource: Promotion
+    type: ProductPromotion
+    user_key: id
+  Promotion:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: discount_percentage
+      required: true
+    - name: id
+    description: Table to define promotions available in the store
+    info_list: Table to define promotions available in the store
+    tab_groups:
+    - direction: tomany
+      fks:
+      - promotion_id
+      name: ProductPromotionList
+      resource: ProductPromotion
+    type: Promotion
+    user_key: name
+  Shipping:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+      required: true
+    - name: address
+      required: true
+    - name: shipping_date
+      type: DATETIME
+    description: Table to handle shipping details for orders
+    info_list: Table to handle shipping details for orders
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Shipping
+    user_key: id
+  Supplier:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: contact_email
+      required: true
+    - name: id
+    description: Table for suppliers providing products
+    info_list: Table for suppliers providing products
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: SupplierProductList
+      resource: SupplierProduct
+    type: Supplier
+    user_key: name
+  SupplierProduct:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: product_id
+      required: true
+    - name: supplier_id
+      required: true
+    description: Junction table linking suppliers with their products
+    info_list: Junction table linking suppliers with their products
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: SupplierProduct
+    user_key: id
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'
